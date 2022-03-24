@@ -1,0 +1,18 @@
+server:
+  port: 8082
+
+# Configuração do banco de dados
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ead-course
+    username: postgres
+    password: 23031990
+  jpa:
+    hibernate:
+      ddl-auto: update # Estamos habilitando a atualização do banco de dados automaticamente quando fizermos alterações nas classes
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true

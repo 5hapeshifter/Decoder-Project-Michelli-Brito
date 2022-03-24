@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL) // todas as vezes que for preciso fazer a serialização de objeto nulo, o campo será ocultado
+@JsonInclude(JsonInclude.Include.NON_NULL) // todas as vezes que for preciso fazer a serialização de atributo nulo, o campo será ocultado
 @Entity
 @Table(name = "TB_USERS")
 public class UserModel extends RepresentationModel implements Serializable { // Quando utilizarmos a herança, todas as classes serão serializadas para evitar possiveis erros
