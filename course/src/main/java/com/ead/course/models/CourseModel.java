@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -46,7 +48,8 @@ public class CourseModel implements Serializable {
 
     // Estamos definindo que a entidade curso pode ter varios modulos
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Estamos definindo o tipo de acesso a esse atributo especifico, tanto na serializacao quanto o inverso
-    @OneToMany(mappedBy = "course") // aqui estamos informando que a chave estrangeira em tb_modules será "course"
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY) // aqui estamos informando que a chave estrangeira em tb_modules será "course", fetch type define a forma de carregamento dos dados (eager ou lazy)
+    @Fetch(FetchMode.SUBSELECT) // Define a forma de buscar os dados, "Join" (eager e defoult) faz uma unica consulta e traz tudo que estiver vinculado, Subselect faz uma consulta para o objeto e outra para o resto que estiver vinculado, o select faz uma consulta para cada coisa
     private Set<ModuleModel> modules; // Utilizamos o set ao invés de um List porque o Set não é ordenado e não permite duplicatas, quando temos muitas associações dentro de uma entidade, se usassemos o o List, teriamos como resultado somente a primeira associacao, as demais nao seriam retornadas
 
 }

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,12 +35,15 @@ public class ModuleModel implements Serializable {
 
     // Aqui estamos definindo que cada módulo só pertence a um curso
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Estamos definindo o tipo de acesso a esse atributo especifico, tanto na serializacao quanto o inverso
-    @ManyToOne(optional = false) // aqui estamos definindo que qualquer módulo deve estar associado a um curso obrigatoriamente
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // aqui estamos definindo que qualquer módulo deve estar associado a um curso obrigatoriamente
     private CourseModel course;
 
-    // // Aqui estamos definindo que cada módulo tem varias lições
+    // Aqui estamos definindo que cada módulo tem varias lições
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Estamos definindo o tipo de acesso a esse atributo especifico, tanto na serializacao quanto o inverso
-    @OneToMany(mappedBy = "module") // aqui estamos informando que a chave estrangeira em tb_modules será "course"
+    @OneToMany(mappedBy = "module", fetch = FetchType.LAZY) // aqui estamos informando que a chave estrangeira em tb_modules será "course", fetch type define a forma de carregamento dos dados (eager ou lazy)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<LessonModel> lessons;
 
+
+    //@OnDelete(action = OnDeleteAction.CASCADE) // estamos delegando a responsabilidade da deleção para o banco de dados, lado ruim é que não sabemos o que está sendo deletado
 }
