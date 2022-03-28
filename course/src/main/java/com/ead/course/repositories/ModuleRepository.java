@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -18,6 +19,9 @@ public interface ModuleRepository extends JpaRepository<ModuleModel, UUID> {
 
     // Estamos definindo uma query de forma nativa
     //@Modifying // Utilizar quando for fazer alguma alteração, update, delete e etc
-    @Query(value="select * from tb_modules where course_course_id = :courseId", nativeQuery = true) // @Query só podemos utilizar quando for select, se for para deletar ou atualizar temos que usar @Modifying em conjunto com @Query
+    @Query(value = "select * from tb_modules where course_course_id = :courseId", nativeQuery = true) // @Query só podemos utilizar quando for select, se for para deletar ou atualizar temos que usar @Modifying em conjunto com @Query
     List<ModuleModel> findAllModulesIntoCourse(@Param("courseId") UUID courseId);
+
+    @Query(value = "select * from tb_modules where course_course_id = :courseId and module_id = :moduleId", nativeQuery = true)
+    Optional<ModuleModel> findModuleIntoCourse(@Param("courseId") UUID courseId, @Param("moduleId") UUID moduleId);
 }
