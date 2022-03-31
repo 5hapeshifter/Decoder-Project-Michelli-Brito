@@ -6,6 +6,7 @@ import com.ead.authuser.services.UserService;
 import com.ead.authuser.services.impl.UserServiceImpl;
 import com.ead.authuser.specifications.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.UUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600) // Com essa anotação, permitimos o acesso de qualquer origem, também podemos utilizar essa anotação em métodos específicos
 @RequestMapping("/users")
@@ -62,10 +64,13 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "userId") UUID userId){
+        log.debug("DELETE - deleteUser userId received {}", userId);
         Optional<UserModel> userModelOptional = userService.findById(userId);
         if(!userModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         } else {
+            log.debug("DELETE - deleteUser - userId deleted {}", userId);
+            log.warn("User deleted successfully userId {}", userId);
             userService.delete(userModelOptional.get());
             return ResponseEntity.status(HttpStatus.OK).body("User deleted succesfully");
         }
@@ -75,6 +80,8 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
                                              @RequestBody @Validated(UserDto.UserView.UserPut.class)
                                              @JsonView(UserDto.UserView.UserPut.class) UserDto userDto){
+        log.debug("Put - updateUser userDto received {}", userDto.toString());
+
         Optional<UserModel> userModelOptional = userService.findById(userId);
         if(!userModelOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -85,6 +92,8 @@ public class UserController {
             userModel.setCpf(userDto.getCpf());
             userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
             userService.save(userModel);
+            log.debug("Put - updateUser - userModel saved {}", userModel.toString());
+            log.warn("User updated successfully userId {}", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
     }
@@ -98,6 +107,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
         if (!userModelOptional.get().getPassword().equals(userDto.getOldPassword())){
+            log.warn("Mismatched od password, user id {}", userDto.getUserId());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismathced old password");
         } else {
             var userModel = userModelOptional.get();

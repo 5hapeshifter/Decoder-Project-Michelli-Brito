@@ -16,4 +16,15 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  output: # Configuracao para habilitar as cores no prompt de comando, padrao Ansi
+    ansi:
+      enabled: Always
+
+# Configuracao para habilitar os logs em niveis de detalhamento mais altos, o LOGBack é a biblioteca padrao do Spring
+logging:
+  level:
+    com.ead: TRACE # Definicao do nivel de pacote, nesse caso, ead. Se tiver dois niveis definidos para o mesmo pacote, o Spring utilizara o nivel de maior detalhamento
+    root: INFO # Definicao a nivel de aplicacao
+    org.springframework.web: DEBUG # Definicao para ver as requisicoes e suas informacoes
+    org.hibernate: INFO # Definicao para ver as informacoes do hibernate e de informacoes que forem processadas
 
