@@ -68,9 +68,13 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec,
-                                                           @PageableDefault(page = 0, size = 10, sort = "courseId", direction = Sort.Direction.ASC) // Aqui estamos definindo a forma de paginação default para quando o usuario nao informar
-                                                                   Pageable pageable){
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(spec, pageable));
+                                                           @PageableDefault(page = 0, size = 10, sort = "courseId", direction = Sort.Direction.ASC) Pageable pageable,// Aqui estamos definindo a forma de paginação default para quando o usuario nao informar
+                                                           @RequestParam(required = false) UUID userId){
+        if(userId != null){
+            return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(SpecificationTemplate.courseUserId(userId).and(spec), pageable));
+        } else{
+            return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(spec, pageable));
+        }
     }
 
     @GetMapping("/{courseId}")

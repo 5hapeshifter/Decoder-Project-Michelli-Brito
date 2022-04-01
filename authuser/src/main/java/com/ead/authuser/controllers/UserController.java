@@ -40,9 +40,14 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers (
             SpecificationTemplate.UserSpec spec,
-            @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) // Aqui estamos definindo a forma de paginação default para quando o usuario nao informar
-                    Pageable pageable) {
-        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
+            @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,// Aqui estamos definindo a forma de paginação default para quando o usuario nao informar
+            @RequestParam(required = false) UUID courseId) {
+        Page<UserModel> userModelPage = null;
+        if (courseId != null) {
+            userModelPage = userService.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable);
+        } else {
+            userModelPage = userService.findAll(spec, pageable);
+        }
         if (!userModelPage.isEmpty()) {
             for (UserModel user : userModelPage.toList()) { // formando uma lista a partir de userModelPage
                 // Abaixo é a criação do link(Hipermida usando Hate oas) para a navegação até o recurso
