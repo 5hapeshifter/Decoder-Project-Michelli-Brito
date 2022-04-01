@@ -57,7 +57,7 @@ public class AuthenticationController {
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userService.save(userModel);
         // Exemplo de log, utilizando as chaves nao ficamos restritos aos tipos primitivos, as chaves serao substituidas pelo segundo objeto que passarmos, userBto nesse caso
-        log.debug("POST - registerUser - userModel saved {}", userModel.toString());
+        log.debug("POST - registerUser - userId saved {}", userModel.getUserId());
         log.warn("User saved successfully userId {}", userModel.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
     }

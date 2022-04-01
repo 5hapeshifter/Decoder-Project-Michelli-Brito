@@ -5,16 +5,19 @@ import com.ead.authuser.enums.UserType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL) // todas as vezes que for preciso fazer a serialização de atributo nulo, o campo será ocultado
+@JsonInclude(JsonInclude.Include.NON_NULL)
+// todas as vezes que for preciso fazer a serialização de atributo nulo, o campo será ocultado
 @Entity
 @Table(name = "TB_USERS")
 public class UserModel extends RepresentationModel implements Serializable { // Quando utilizarmos a herança, todas as classes serão serializadas para evitar possiveis erros
@@ -52,4 +55,7 @@ public class UserModel extends RepresentationModel implements Serializable { // 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime lastUpdateDate;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) // user sera a chave estrangeira na outra tabela
+    private Set<UserCourseModel> usersCourses;
 }

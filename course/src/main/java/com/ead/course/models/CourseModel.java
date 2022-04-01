@@ -52,4 +52,7 @@ public class CourseModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT) // Define a forma de buscar os dados, "Join" (eager e defoult) faz uma unica consulta e traz tudo que estiver vinculado, Subselect faz uma consulta para o objeto e outra para o resto que estiver vinculado, o select faz uma consulta para cada coisa
     private Set<ModuleModel> modules; // Utilizamos o set ao invés de um List porque o Set não é ordenado e não permite duplicatas, quando temos muitas associações dentro de uma entidade, se usassemos o o List, teriamos como resultado somente a primeira associacao, as demais nao seriam retornadas
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Estamos definindo o tipo de acesso a esse atributo especifico, tanto na serializacao quanto o inverso
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY) // atributo que sera chave estrangeira na outra tabela
+    private Set<CourseUserModel> coursesUsers;
 }
