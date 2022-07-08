@@ -55,4 +55,8 @@ public class CourseModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Estamos definindo o tipo de acesso a esse atributo especifico, tanto na serializacao quanto o inverso
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY) // atributo que sera chave estrangeira na outra tabela
     private Set<CourseUserModel> coursesUsers;
+
+    public CourseUserModel convertToCourseUserModel(UUID userId) {
+        return new CourseUserModel(null, this, userId);
+    }
 }
