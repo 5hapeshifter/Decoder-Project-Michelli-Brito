@@ -58,4 +58,8 @@ public class UserModel extends RepresentationModel implements Serializable { // 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) // user sera a chave estrangeira na outra tabela
     private Set<UserCourseModel> usersCourses;
+
+    public UserCourseModel convertToUserCourseModel(UUID courseId) {
+        return new UserCourseModel(null, this, courseId);
+    }
 }

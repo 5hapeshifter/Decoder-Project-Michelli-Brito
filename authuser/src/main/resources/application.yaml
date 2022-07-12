@@ -28,3 +28,7 @@ logging:
     org.springframework.web: DEBUG # Definicao para ver as requisicoes e suas informacoes
     org.hibernate: INFO # Definicao para ver as informacoes do hibernate e de informacoes que forem processadas
 
+ead:
+  api:
+    url:
+      course: 'http://localhost:8082'

@@ -5,6 +5,7 @@ import com.ead.authuser.dtos.ResponsePageDto;
 import com.ead.authuser.services.UtilsService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ import java.util.UUID;
 
 @Log4j2
 @Component
-public class UserClient {
+public class CourseClient {
 
     // Aqui sera implementada a requisicao para o CourseMicroservice
     @Autowired
@@ -28,13 +29,14 @@ public class UserClient {
     @Autowired
     UtilsService utilsService;
 
-    private String REQUEST_URI = "http://localhost:8082";
+    @Value("${ead.api.url.course}")
+    private String REQUEST_URL_COURSE;
 
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable) {
         List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
         // url do outro microservice
-        String url = utilsService.createUrl(userId, pageable);
+        String url = REQUEST_URL_COURSE + utilsService.createUrl(userId, pageable);
         log.debug("Request URL: {} ", url);
         log.info("Request URL: {} ", url);
         try {
